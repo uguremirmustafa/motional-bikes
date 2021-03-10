@@ -14,6 +14,13 @@ This is an external-api based application. It fetches data from [Bike Index API]
 
 🚀 CSS modules and [TailwindCSS](https://tailwindcss.com/) for styling. 🌈
 
+### Tech Stack
+- NextJS
+  - next/image
+  - next/dynamic import
+- React-query
+- Hosted on Vercel
+
 ### Application type
 ---
 📚 education and learning 
