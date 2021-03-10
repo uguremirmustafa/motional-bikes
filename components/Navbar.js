@@ -4,8 +4,8 @@ import { ActiveLink } from './ActiveLink';
 
 function Navbar() {
   const normalRoutes = [
-    // { route: '/', label: 'Home' },
-    // { route: '/manufacturers', label: 'manufacturers' },
+    { route: '/', label: 'Home' },
+    { route: '/stolen-bikes', label: 'Stolen Bikes' },
   ];
 
   const normalLinks = normalRoutes.map((i) => (
