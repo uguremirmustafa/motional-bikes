@@ -1,9 +1,11 @@
-import React, { useState, useRef } from 'react';
-import ReactMapGL, { MapContext, Marker, FlyToInterpolator } from 'react-map-gl';
+import React, { useState, useRef, useEffect } from 'react';
+import ReactMapGL, { MapContext, Marker, FlyToInterpolator, Popup } from 'react-map-gl';
 import useSupercluster from 'use-supercluster';
-import { FaBicycle } from 'react-icons/fa';
+import { FaBicycle, FaTimesCircle } from 'react-icons/fa';
 
 export default function Map({ data }) {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(null);
   const [viewport, setViewport] = useState({
     width: '100vw',
     height: 'calc(100vh - 64px)',
@@ -14,14 +16,24 @@ export default function Map({ data }) {
   const mapRef = useRef();
 
   //get points
-  const points = data?.map((station) => ({
-    type: 'Feature',
-    properties: { cluster: false, stationId: station.number },
-    geometry: {
-      type: 'Point',
-      coordinates: [station.position.lng, station.position.lat],
-    },
-  }));
+  const points = data?.map((station) => {
+    // console.log(station);
+    return {
+      type: 'Feature',
+      properties: {
+        cluster: false,
+        stationId: station.number,
+        status: station.status,
+        address: station.address,
+        availableStands: station.available_bike_stands,
+        availableBikes: station.available_bikes,
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [station.position.lng, station.position.lat],
+      },
+    };
+  });
 
   //get map bounds
   const bounds = mapRef.current ? mapRef.current.getMap().getBounds().toArray().flat() : null;
@@ -33,6 +45,16 @@ export default function Map({ data }) {
     bounds,
     options: { radius: 90, maxZoom: 20 },
   });
+
+  //popup closer with escape
+  useEffect(() => {
+    const listener = (e) => {
+      if (e.key === 'Escape') {
+        setSelected(null);
+      }
+    };
+    window.addEventListener('keydown', listener);
+  }, []);
 
   return (
     <ReactMapGL
@@ -81,12 +103,54 @@ export default function Map({ data }) {
         }
         return (
           <Marker key={cluster.properties.stationId} latitude={latitude} longitude={longitude}>
-            <div className="w-6 h-6 bg-red-300 rounded-full flex justify-center items-center">
+            <div
+              className="w-6 h-6 bg-red-300 rounded-full flex justify-center items-center cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                setSelected(cluster);
+              }}
+            >
               <FaBicycle size="16px" color="white" />
             </div>
           </Marker>
         );
       })}
+      {selected ? (
+        <Popup
+          latitude={selected?.geometry.coordinates[1]}
+          longitude={selected?.geometry.coordinates[0]}
+          onClose={() => {
+            setSelected(null);
+          }}
+          closeButton={false}
+          closeOnClick={true}
+          anchor="right"
+        >
+          <div className="p-2 w-52">
+            <div className="flex w-full justify-end">
+              <FaTimesCircle />
+            </div>
+            <h2 className="lowercase">
+              <strong>Address: </strong>
+              {selected.properties.address}
+            </h2>
+            <p className="lowercase">
+              <strong>status: </strong>
+              {selected.properties.status === 'OPEN' && (
+                <span className="text-green-400 underline">open</span>
+              )}
+            </p>
+            <p>
+              <strong>available bikes: </strong>
+              {selected.properties.availableBikes}
+            </p>
+            <p>
+              <strong>available stands: </strong>
+              {selected.properties.availableStands}
+            </p>
+          </div>
+        </Popup>
+      ) : null}
     </ReactMapGL>
   );
 }
