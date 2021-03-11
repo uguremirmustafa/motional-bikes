@@ -125,6 +125,7 @@ export default function Map({ data }) {
           closeButton={false}
           closeOnClick={true}
           anchor="bottom"
+          className="popup"
         >
           <div className="p-2 w-52">
             <div className="flex w-full justify-end">
