@@ -124,7 +124,7 @@ export default function Map({ data }) {
           }}
           closeButton={false}
           closeOnClick={true}
-          anchor="right"
+          anchor="bottom"
         >
           <div className="p-2 w-52">
             <div className="flex w-full justify-end">
