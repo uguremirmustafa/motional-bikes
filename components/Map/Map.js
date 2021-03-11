@@ -1,5 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import ReactMapGL, { MapContext, Marker, FlyToInterpolator, Popup } from 'react-map-gl';
+import ReactMapGL, {
+  Marker,
+  FlyToInterpolator,
+  Popup,
+  FullscreenControl,
+  NavigationControl,
+} from 'react-map-gl';
 import useSupercluster from 'use-supercluster';
 import { FaBicycle, FaTimesCircle } from 'react-icons/fa';
 
@@ -56,6 +62,17 @@ export default function Map({ data }) {
     window.addEventListener('keydown', listener);
   }, []);
 
+  //full screen toggle style
+  const fullscreenControlStyle = {
+    right: 20,
+    top: 20,
+  };
+  //zoom buttons style
+  const navControlStyle = {
+    right: 20,
+    top: 60,
+  };
+
   return (
     <ReactMapGL
       {...viewport}
@@ -66,6 +83,8 @@ export default function Map({ data }) {
       minZoom={11}
       maxZoom={18}
     >
+      <NavigationControl style={navControlStyle} />
+      <FullscreenControl style={fullscreenControlStyle} />
       {clusters.map((cluster) => {
         const [longitude, latitude] = cluster.geometry.coordinates;
         const { cluster: isCluster, point_count: pointCount } = cluster.properties;
@@ -124,7 +143,8 @@ export default function Map({ data }) {
           }}
           closeButton={false}
           closeOnClick={true}
-          anchor="right"
+          anchor="bottom"
+          className="popup"
         >
           <div className="p-2 w-52">
             <div className="flex w-full justify-end">
@@ -137,7 +157,7 @@ export default function Map({ data }) {
             <p className="lowercase">
               <strong>status: </strong>
               {selected.properties.status === 'OPEN' && (
-                <span className="text-green-400 underline">open</span>
+                <span className="text-green-400 font-bold">open</span>
               )}
             </p>
             <p>
