@@ -19,6 +19,8 @@
     "react-intersection-observer": "^8.31.0",
     "react-map-gl": "^6.1.10",
     "react-query": "^3.12.1",
-    "tailwindcss": "^2.0.2"
+    "supercluster": "^7.1.2",
+    "tailwindcss": "^2.0.2",
+    "use-supercluster": "^0.2.9"
   }
 }

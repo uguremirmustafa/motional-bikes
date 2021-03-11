@@ -20,7 +20,7 @@ html {
     @apply underline;
   }
   .grad-bg {
-    @apply bg-gradient-to-r from-purple-500 to-red-200;
+    @apply bg-gradient-to-b from-gray-200 to-white;
   }
 }
 
